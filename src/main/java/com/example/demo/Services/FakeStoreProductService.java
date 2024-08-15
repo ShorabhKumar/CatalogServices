@@ -3,36 +3,86 @@ package com.example.demo.Services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
+import com.example.demo.dtos.FakeStoreProductRequestDto;
+import com.example.demo.dtos.FakeStoreProductResponseDto;
+
 
 @Service
 public class FakeStoreProductService implements ProductServices {
 
-	@Override
-	public List<Product> getAllProduct() {
-		List<Product> products = new ArrayList<>();		
-		Category cat = new Category(1L, "HandSet");		
-		products.add(new Product(1L, "J2", "mobile", "j2.png", 20.00, cat));
-		products.add(new Product(2L, "J5", "mobile", "j5.png", 40.00, cat));
-		products.add(new Product(3L, "J7", "mobile", "j7.png", 60.00, cat));
-		
-		return products;
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	public FakeStoreProductService(RestTemplate restTemplate) {
+		super();
+		this.restTemplate = restTemplate;
 	}
 
 	@Override
 	public Product getProductById(Long id) {
 		// TODO Auto-generated method stub
-		List<Product> proMod = this.getAllProduct();
+		FakeStoreProductResponseDto responseDto = restTemplate.getForObject(
+			"https://fakestoreapi.com/products/"+id, 
+			FakeStoreProductResponseDto.class
+		);
+		return responseDto.toProduct();
+	}
+	
+	@Override
+	public List<Product> getAllProduct() {
+		FakeStoreProductResponseDto[] responseDtos = restTemplate.getForObject(
+			"https://fakestoreapi.com/products/", 
+			FakeStoreProductResponseDto[].class
+		);
 		
-		for(Product pr: proMod) {
-			if(pr.getId() == id) {
-				return pr;
-			}
+		List<Product> products = new ArrayList<>();
+		for(FakeStoreProductResponseDto response: responseDtos) {
+			products.add(response.toProduct());
 		}
-		return null;
+		
+		return products;
 	}
 
+	@Override
+	public Product createProduct(String title, String description, Double price, String imageUrl, String categoryName) {
+		
+		FakeStoreProductRequestDto requestDto = new FakeStoreProductRequestDto();
+        requestDto.setTitle(title);
+        requestDto.setDescription(description);
+        requestDto.setCategory(categoryName);
+        requestDto.setPrice(price);
+        requestDto.setImage(imageUrl);
+
+        FakeStoreProductResponseDto responseDto = restTemplate.postForObject(
+                "https://fakestoreapi.com/products",
+                requestDto,
+                FakeStoreProductResponseDto.class
+        );
+
+
+        return responseDto.toProduct();
+	}
+	
+	 @Override
+	 public Product partialUpdate(Long id, Product product) {
+		 HttpEntity<Product> httpEntity = new HttpEntity<>(product); // Add dto object here
+
+		 ResponseEntity<FakeStoreProductResponseDto> responseEntity = restTemplate.exchange(
+				 "https://fakestoreapi.com/products" + id,
+				 HttpMethod.PATCH,
+	                httpEntity, // use dto here
+	                FakeStoreProductResponseDto.class
+				);
+
+	      FakeStoreProductResponseDto responseDto = responseEntity.getBody();
+
+	      return null;
+	    }
 }
