@@ -8,17 +8,7 @@ public class Product {
 	private Double price;
 	private Category category;
 	
-	public Product(Long id, String title, String description, String imageUrl, Double price, Category category) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.imageUrl = imageUrl;
-		this.price = price;
-		this.category = category;
-	}
-
-
+	
 	public Long getId() {
 		return id;
 	}
