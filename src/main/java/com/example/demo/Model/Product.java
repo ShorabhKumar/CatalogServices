@@ -1,27 +1,29 @@
 package com.example.demo.Model;
 
-public class ProductModel {
-
-	private int id;
+public class Product {
+	private Long id;
 	private String title;
 	private String description;
 	private String imageUrl;
-	private int price;
+	private Double price;
+	private Category category;
 	
-	public ProductModel(int id, String title, String description, String imageUrl, int price) {
+	public Product(Long id, String title, String description, String imageUrl, Double price, Category category) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.imageUrl = imageUrl;
 		this.price = price;
+		this.category = category;
 	}
 
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -49,11 +51,19 @@ public class ProductModel {
 		this.imageUrl = imageUrl;
 	}
 
-	public int getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}	
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.Model.ProductModel;
+import com.example.demo.Model.Product;
 import com.example.demo.Services.ProductServices;
 
 @RestController
@@ -20,14 +20,14 @@ public class ProductController {
 	ProductServices productServices;
 	
 	@GetMapping("/products")
-	public List<ProductModel> getProductList() {
+	public List<Product> getProductList() {
 		return productServices.getAllProduct();
 	}
 	
 	@GetMapping("/product/{id}")
-	public ResponseEntity<ProductModel> getProductById(@PathVariable("id") int id) {
+	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
 		//return productServices.getProductById(id);
-		ResponseEntity<ProductModel> resEnty = new ResponseEntity<>(productServices.getProductById(id),HttpStatusCode.valueOf(202));
+		ResponseEntity<Product> resEnty = new ResponseEntity<>(productServices.getProductById(id),HttpStatusCode.valueOf(202));
 		return resEnty;
 	}
 }
