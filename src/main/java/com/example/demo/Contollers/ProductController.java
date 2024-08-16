@@ -6,14 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.ProductNotFoundException;
 import com.example.demo.Model.Product;
 import com.example.demo.Services.ProductServices;
+import com.example.demo.dtos.ErrorDto;
 import com.example.demo.dtos.ProductRequestDto;
 import com.example.demo.dtos.ProductResponseDto;
 
@@ -31,7 +34,7 @@ public class ProductController {
 	
 	
 	@GetMapping("/product/{id}")
-	public ProductResponseDto getProductById(@PathVariable("id") Long id) {
+	public ProductResponseDto getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
 		Product product = productServices.getProductById(id);
 		return ProductResponseDto.from(product);
 	}
@@ -52,4 +55,14 @@ public class ProductController {
 				);
 		return ProductResponseDto.from(product);
 	}
+	
+    // Only invoked in ProductController class.
+    // If there is any other controller that throws NPE, this won't be called
+//	@ExceptionHandler(NullPointerException.class)
+//	 public ErrorDto nullPointerExceptionHandler() {
+//		 ErrorDto errorDto = new ErrorDto();
+//		 errorDto.setStatus("FAILURE");
+//		 errorDto.setMessage("some thing want wrong");
+//		 return errorDto;
+//	 }
 }

@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.ProductNotFoundException;
 import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
+import com.example.demo.dtos.ErrorDto;
 import com.example.demo.dtos.FakeStoreProductRequestDto;
 import com.example.demo.dtos.FakeStoreProductResponseDto;
 
@@ -26,12 +32,16 @@ public class FakeStoreProductService implements ProductServices {
 	}
 
 	@Override
-	public Product getProductById(Long id) {
+	public Product getProductById(Long id) throws ProductNotFoundException {
 		// TODO Auto-generated method stub
 		FakeStoreProductResponseDto responseDto = restTemplate.getForObject(
 			"https://fakestoreapi.com/products/"+id, 
 			FakeStoreProductResponseDto.class
 		);
+		
+		if(responseDto == null) {
+			throw new ProductNotFoundException("Product with id: "+ id +" not found");
+		}
 		return responseDto.toProduct();
 	}
 	
@@ -70,19 +80,25 @@ public class FakeStoreProductService implements ProductServices {
         return responseDto.toProduct();
 	}
 	
-	 @Override
-	 public Product partialUpdate(Long id, Product product) {
-		 HttpEntity<Product> httpEntity = new HttpEntity<>(product); // Add dto object here
-
-		 ResponseEntity<FakeStoreProductResponseDto> responseEntity = restTemplate.exchange(
-				 "https://fakestoreapi.com/products" + id,
-				 HttpMethod.PATCH,
-	                httpEntity, // use dto here
-	                FakeStoreProductResponseDto.class
-				);
-
-	      FakeStoreProductResponseDto responseDto = responseEntity.getBody();
-
-	      return null;
-	    }
+	@Override
+	public Product partialUpdate(Long id, Product product) {
+		return product;
+	}
+//	 @Override
+//	 public Product partialUpdate(Long id, Product product) {
+//		 HttpEntity<Product> httpEntity = new HttpEntity<>(product); // Add dto object here
+//
+//		 ResponseEntity<FakeStoreProductResponseDto> responseEntity = restTemplate.exchange(
+//				 "https://fakestoreapi.com/products" + id,
+//				 HttpMethod.PATCH,
+//	                httpEntity, // use dto here
+//	                FakeStoreProductResponseDto.class
+//				);
+//
+//	      FakeStoreProductResponseDto responseDto = responseEntity.getBody();
+//
+//	      return null;
+//	    }
+	 
+	 
 }
