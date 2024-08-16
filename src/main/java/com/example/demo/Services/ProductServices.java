@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.ProductNotFoundException;
 import com.example.demo.Model.Product;
 
 public interface ProductServices {
 	
-	public Product getProductById(Long id);
+	public Product getProductById(Long id) throws ProductNotFoundException;
 	
 	public List<Product> getAllProduct();
 	
