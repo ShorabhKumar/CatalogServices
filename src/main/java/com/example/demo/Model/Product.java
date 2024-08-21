@@ -1,22 +1,31 @@
 package com.example.demo.Model;
 
-public class Product {
-	private Long id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "product")
+public class Product extends BaseModel {
+	
+	@Column(name="title")
 	private String title;
+	
+	@Column(name="description")
 	private String description;
+	
+	@Column(name = "image_url")
 	private String imageUrl;
+	
+	@Column(name = "price")
 	private Double price;
+	
+	@JoinColumn(name ="category")
+	@ManyToOne
 	private Category category;
-	
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+			
 	public String getTitle() {
 		return title;
 	}
