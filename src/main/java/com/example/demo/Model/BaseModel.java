@@ -2,6 +2,9 @@ package com.example.demo.Model;
 
 import java.sql.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,12 +20,15 @@ public class BaseModel {
 	private Long id;
 	
 	@Column(name="created_at")
+	@CreationTimestamp
 	private Date createdAt;
 	
+	
 	@Column(name="updated_at")
+	@UpdateTimestamp
 	private Date updatedAt;
 	
-	@Column(name="is_deleted")
+	@Column(name="is_deleted")	
 	private Boolean isDeleted;
 	
 	public Long getId() {

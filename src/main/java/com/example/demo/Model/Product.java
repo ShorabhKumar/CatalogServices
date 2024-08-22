@@ -1,5 +1,6 @@
 package com.example.demo.Model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -22,8 +23,8 @@ public class Product extends BaseModel {
 	@Column(name = "price")
 	private Double price;
 	
-	@JoinColumn(name ="category")
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "category")
 	private Category category;
 			
 	public String getTitle() {
