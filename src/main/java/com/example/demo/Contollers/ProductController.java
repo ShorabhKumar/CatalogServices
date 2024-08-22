@@ -1,12 +1,11 @@
 package com.example.demo.Contollers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.ProductNotFoundException;
 import com.example.demo.Model.Product;
 import com.example.demo.Services.ProductServices;
-import com.example.demo.dtos.ErrorDto;
 import com.example.demo.dtos.ProductRequestDto;
 import com.example.demo.dtos.ProductResponseDto;
 
@@ -27,7 +25,7 @@ public class ProductController {
 	ProductServices productServices;
 	
 	@Autowired
-	public ProductController(ProductServices productServices) {
+	public ProductController(@Qualifier("productDbService") ProductServices productServices) {
 		super();
 		this.productServices = productServices;
 	}
@@ -35,8 +33,8 @@ public class ProductController {
 	
 	@GetMapping("/product/{id}")
 	public ProductResponseDto getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
-		Product product = productServices.getProductById(id);
-		return ProductResponseDto.from(product);
+		Optional<Product> product = productServices.getProductById(id);
+		return ProductResponseDto.from(product.get());
 	}
 	
 	@GetMapping("/product")
@@ -54,6 +52,11 @@ public class ProductController {
                 productRequestDto.getCategoryName()
 				);
 		return ProductResponseDto.from(product);
+	}
+	
+	@DeleteMapping("/product/{id}")
+	public String deleteProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+		return productServices.deleteProduct(id);
 	}
 	
     // Only invoked in ProductController class.

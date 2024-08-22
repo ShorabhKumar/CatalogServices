@@ -2,25 +2,22 @@ package com.example.demo.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.ProductNotFoundException;
-import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
-import com.example.demo.dtos.ErrorDto;
 import com.example.demo.dtos.FakeStoreProductRequestDto;
 import com.example.demo.dtos.FakeStoreProductResponseDto;
 
 
 @Service
 public class FakeStoreProductService implements ProductServices {
+
+	
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -32,7 +29,7 @@ public class FakeStoreProductService implements ProductServices {
 	}
 
 	@Override
-	public Product getProductById(Long id) throws ProductNotFoundException {
+	public Optional<Product> getProductById(Long id) throws ProductNotFoundException {
 		// TODO Auto-generated method stub
 		FakeStoreProductResponseDto responseDto = restTemplate.getForObject(
 			"https://fakestoreapi.com/products/"+id, 
@@ -42,7 +39,7 @@ public class FakeStoreProductService implements ProductServices {
 		if(responseDto == null) {
 			throw new ProductNotFoundException("Product with id: "+ id +" not found");
 		}
-		return responseDto.toProduct();
+		return Optional.ofNullable(responseDto.toProduct());
 	}
 	
 	@Override
@@ -83,6 +80,12 @@ public class FakeStoreProductService implements ProductServices {
 	@Override
 	public Product partialUpdate(Long id, Product product) {
 		return product;
+	}
+	
+	@Override
+	public String deleteProduct(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 //	 @Override
 //	 public Product partialUpdate(Long id, Product product) {

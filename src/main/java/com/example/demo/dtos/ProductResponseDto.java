@@ -1,6 +1,5 @@
 package com.example.demo.dtos;
 
-import com.example.demo.Model.Category;
 import com.example.demo.Model.Product;
 
 public class ProductResponseDto {
